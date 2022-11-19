@@ -31,9 +31,6 @@ export default function Login() {
             console.log(responseJson);
             setLoginResult(responseJson);
             })
-
-
-            what
     }
 
 
