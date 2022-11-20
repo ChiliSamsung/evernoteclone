@@ -1,13 +1,15 @@
 import React from "react";
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 
 function Header() {
   return (
     <header>
       <h1>
-        <span><TextSnippetIcon/></span>
+        <span>
+          <TextSnippetIcon />
+        </span>
         Evernote Clone
-    </h1>
+      </h1>
     </header>
   );
 }
