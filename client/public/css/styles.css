@@ -8,6 +8,10 @@ input {
     autocomplete: off;
 }
 
+button {
+    margin: 5px;
+}
+
 
 /** header component **/
 header {

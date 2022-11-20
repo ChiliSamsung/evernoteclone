@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Note from "../components/Note.jsx";
 import CreateNoteArea from "../components/CreateNoteArea.jsx";
 import { v4 as uuid } from "uuid";
 import Header from "../components/Header.jsx";
-import { useNavigate, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+
 
 
 function Home() {
@@ -28,11 +30,25 @@ function Home() {
     });
   }
 
-  //will update to use cookies later
-  const loggedIn = false
-  if (!loggedIn) {
-    return <Navigate to="/login" />
-  }
+  const [cookies, setCookie] = useCookies(["user"]);
+  console.log("On home route");
+  console.log(cookies);
+
+  const loggedIn = cookies.LoggedIn;
+  //useEffect with empty array ensures only runs the one time.
+  useEffect(() => {
+    if (!loggedIn) {
+      return <Navigate to="/login" />
+    } else {
+      const queryString = `/notes/${cookies.LoggedInUsername}`;
+      fetch(queryString)
+      .then((res) => res.json())
+      .then((responseJson) => {
+          console.log(responseJson);
+          setNotes(responseJson);
+      })  
+    }
+  }, [])
   
 
   return (
@@ -40,7 +56,6 @@ function Home() {
       <Header />
       <CreateNoteArea 
         addNote={addNote}
-
       />
       {notes.map((note) => {
         return <Note 

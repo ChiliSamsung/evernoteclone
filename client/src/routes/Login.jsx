@@ -1,5 +1,8 @@
 import React from "react";
 import Header from "../components/Header.jsx";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Login() {
 
@@ -9,6 +12,10 @@ export default function Login() {
         username: "",
         password: "",
     });
+
+    const [cookies, setCookie] = useCookies(["user"]);
+
+    const navigate = useNavigate();
 
     function handleLoginUpdate(event) {
         const {name, value} = event.target;
@@ -28,8 +35,41 @@ export default function Login() {
         fetch(queryString)
             .then((res) => res.json())
             .then((responseJson) => {
-            console.log(responseJson);
-            setLoginResult(responseJson);
+                console.log(responseJson);
+                if (responseJson !== "Incorrect Login") {
+                    const options = {
+                        path: "/",
+                        maxAge: 1800,
+                        sameSite: "lax"
+                    }
+                    setLoginResult("Login Success");
+                    setCookie("LoggedIn", true, options);
+                    setCookie("LoggedInUsername", responseJson, options);
+                    navigate("/");
+                } else {
+                    setLoginResult("Login Failed. Try Again");
+                }
+            })
+    }
+
+    function handleSubmitRegister() {
+        const newUser = {
+            username: loginData.username,
+            password: loginData.password
+        }
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json"},
+            body: JSON.stringify(newUser)
+        }
+        fetch("/register", requestOptions)
+            .then((res) =>  {
+                console.log(res);
+                if (res.ok) {
+                    setLoginResult(`Register succeeded Try logging in.`);
+                } else {
+                    setLoginResult(`Register failed.`);
+                }
             })
     }
 
@@ -62,7 +102,15 @@ export default function Login() {
                             handleSubmitLogin();
                             event.preventDefault();
                         }}    
-                    >Submit</button>
+                    >Login</button>
+
+                    <button
+                        type="submit"
+                        onClick={(event) => {
+                            handleSubmitRegister();
+                            event.preventDefault();
+                        }}
+                        >Register</button>
 
                     <p>{!loginResultString ? "Login result pending..." : loginResultString}</p>
                 </form>
