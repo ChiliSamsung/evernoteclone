@@ -8,6 +8,7 @@ const app = express();
 app.use(bodyParser.urlencoded({
  extended: true   
 }));
+app.use(express.json());
 
 //will change later when we put on heroku
 mongoose.connect("mongodb://127.0.0.1:27017/notesDB");
@@ -36,6 +37,8 @@ const Note = mongoose.model("Note", NoteSchema);
 
 //register new user
 app.post("/register", (req, res) => {
+    console.log(req.body);
+
     const newUser = new User({
         username: req.body.username,
         password: req.body.password
@@ -43,8 +46,11 @@ app.post("/register", (req, res) => {
 
     newUser.save((err) => {
         if (err) {
+            //console.log(err);
+            res.status(500);
             res.send(`Got an error while trying to save user ${err}`);
         } else {
+            res.status(200);
             res.send(`Successfully saved new user with name ${newUser.username}`);
         }
     });
