@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const path = require("path");
 
 const PORT = process.env.PORT || 5000;
 
@@ -15,8 +16,14 @@ app.use(
 //allows client to send JSON in request body
 app.use(express.json());
 
-//will change later when we put on heroku
-mongoose.connect("mongodb://127.0.0.1:27017/notesDB");
+//have Node serve the files for our built React app
+app.use(express.static(path.resolve(__dirname, "../client/build")));
+
+//mongo DB atlas database is here as opposed to localhost.
+//mongoose.connect("mongodb://127.0.0.1:27017/notesDB");
+mongoose.connect(
+  "mongodb+srv://test-admin:clobberSlobberProper45@cluster0.lnz11yi.mongodb.net/?retryWrites=true&w=majority"
+);
 
 const NoteSchema = new mongoose.Schema({
   title: String,
@@ -138,8 +145,9 @@ app.delete("/notes/:userId/:noteId", (req, res) => {
   );
 });
 
-app.get("/api", (req, res) => {
-  res.json({ message: "Here is your json response" });
+//All other GET requests not handled will return our React app
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
 });
 
 app.listen(PORT, () => {
