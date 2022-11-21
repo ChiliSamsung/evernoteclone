@@ -92,6 +92,7 @@ app.get("/notes/:userId", (req, res) => {
   );
 });
 
+//add new note for a given user ID.
 app.put("/notes/:userId", (req, res) => {
   const userId = req.params.userId;
   const newNote = new Note({
@@ -111,6 +112,27 @@ app.put("/notes/:userId", (req, res) => {
         res.send(`Could not add note for reason ${err}`);
       } else {
         res.send(`Was able to add note: ${newNote}`);
+      }
+    }
+  );
+});
+
+app.delete("/notes/:userId/:noteId", (req, res) => {
+  const userId = req.params.userId;
+  const noteId = req.params.noteId;
+  User.findOneAndUpdate(
+    {
+      _id: userId,
+    },
+    {
+      $pull: { notes: { _id: noteId } },
+    },
+    function (err, success) {
+      if (err) {
+        console.log(err);
+        res.send(`Could not delete not for reason ${err}`);
+      } else {
+        res.send(`Was able to delete note for user ${userId}`);
       }
     }
   );

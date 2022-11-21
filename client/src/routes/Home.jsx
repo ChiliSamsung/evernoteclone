@@ -7,25 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
 function Home() {
-  const defaultNote = {
-    id: uuid(),
-    title: "This is my first note",
-    content: "Bunch of lorem ipsum",
-  };
-  const [notes, setNotes] = React.useState([defaultNote]);
-  function addNote(note) {
-    const newNote = {
-      ...note,
-      id: uuid(),
-    };
-
-    setNotes((prevValue) => {
-      return [...prevValue, newNote];
-    });
-  }
+  const [notes, setNotes] = React.useState([]);
   const navigate = useNavigate();
-
   const [cookies, setCookie] = useCookies(["user"]);
+
   console.log("On home route");
   console.log(cookies);
 
@@ -45,6 +30,54 @@ function Home() {
     }
   }, []);
 
+  function addNote(note) {
+    console.log(note);
+    const newNote = {
+      title: note.title,
+      content: note.content,
+    };
+    console.log(newNote);
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newNote),
+    };
+    fetch(`/notes/${cookies.LoggedInUsername}`, requestOptions).then((res) => {
+      console.log(res);
+      if (res.ok) {
+        const queryString = `/notes/${cookies.LoggedInUsername}`;
+        fetch(queryString)
+          .then((res) => res.json())
+          .then((responseJson) => {
+            console.log(responseJson);
+            setNotes(responseJson);
+          });
+      }
+    });
+  }
+
+  function deleteNote(noteId) {
+    console.log(noteId);
+    const requestOptions = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    };
+    fetch(`/notes/${cookies.LoggedInUsername}/${noteId}`, requestOptions).then(
+      (res) => {
+        console.log(res);
+        if (res.ok) {
+          const queryString = `/notes/${cookies.LoggedInUsername}`;
+          fetch(queryString)
+            .then((res) => res.json())
+            .then((responseJson) => {
+              console.log(responseJson);
+              setNotes(responseJson);
+            });
+        }
+      }
+    );
+  }
+
   return (
     <div>
       <Header />
@@ -52,10 +85,11 @@ function Home() {
       {notes.map((note) => {
         return (
           <Note
-            key={note.id}
-            id={note.id}
+            key={note._id}
+            id={note._id}
             title={note.title}
             content={note.content}
+            deleteNote={deleteNote}
           />
         );
       })}

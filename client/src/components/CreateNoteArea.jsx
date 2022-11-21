@@ -2,8 +2,8 @@ import React from "react";
 
 function CreateNoteArea(props) {
   const [formInfo, setFormInfo] = React.useState({
-    formTitle: "",
-    formContent: "",
+    title: "",
+    content: "",
   });
 
   function handleFormUpdate(event) {
@@ -23,11 +23,13 @@ function CreateNoteArea(props) {
           name="title"
           type="text"
           placeholder="Title"
+          value={formInfo.title}
           onChange={handleFormUpdate}
         />
         <textarea
           name="content"
           placeholder="Lorem Ipsum"
+          value={formInfo.content}
           rows="3"
           onChange={handleFormUpdate}
         />
@@ -36,6 +38,10 @@ function CreateNoteArea(props) {
           type="submit"
           onClick={(event) => {
             props.addNote(formInfo);
+            setFormInfo({
+              title: "",
+              content: "",
+            });
             event.preventDefault();
           }}
         >
