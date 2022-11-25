@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Note from "../components/Note.jsx";
 import CreateNoteArea from "../components/CreateNoteArea.jsx";
-import { v4 as uuid } from "uuid";
 import Header from "../components/Header.jsx";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
@@ -9,10 +8,7 @@ import { useCookies } from "react-cookie";
 function Home() {
   const [notes, setNotes] = React.useState([]);
   const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies(["user"]);
-
-  console.log("On home route");
-  console.log(cookies);
+  const [cookies] = useCookies(["user"]);
 
   let loggedIn = cookies.LoggedIn;
   //useEffect with empty array ensures only runs the one time.
@@ -24,32 +20,24 @@ function Home() {
       fetch(queryString)
         .then((res) => res.json())
         .then((responseJson) => {
-          console.log(responseJson);
           setNotes(responseJson);
         });
     }
-  }, []);
+  }, [cookies, loggedIn, navigate]);
 
   function addNote(note) {
-    console.log(note);
-    const newNote = {
-      title: note.title,
-      content: note.content,
-    };
-    console.log(newNote);
+    const newNote = { title: note.title, content: note.content };
     const requestOptions = {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newNote),
     };
     fetch(`/notes/${cookies.LoggedInUsername}`, requestOptions).then((res) => {
-      console.log(res);
       if (res.ok) {
         const queryString = `/notes/${cookies.LoggedInUsername}`;
         fetch(queryString)
           .then((res) => res.json())
           .then((responseJson) => {
-            console.log(responseJson);
             setNotes(responseJson);
           });
       }
@@ -57,26 +45,25 @@ function Home() {
   }
 
   function deleteNote(noteId) {
-    console.log(noteId);
     const requestOptions = {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     };
     fetch(`/notes/${cookies.LoggedInUsername}/${noteId}`, requestOptions).then(
       (res) => {
-        console.log(res);
         if (res.ok) {
           const queryString = `/notes/${cookies.LoggedInUsername}`;
           fetch(queryString)
             .then((res) => res.json())
             .then((responseJson) => {
-              console.log(responseJson);
               setNotes(responseJson);
             });
         }
       }
     );
   }
+
+  console.log(notes);
 
   return (
     <div>

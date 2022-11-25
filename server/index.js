@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 //mongo DB atlas database is here as opposed to localhost.
-//mongoose.connect("mongodb://127.0.0.1:27017/notesDB");
+// mongoose.connect("mongodb://127.0.0.1:27017/notesDB");
 mongoose.connect(
   "mongodb+srv://test-admin:clobberSlobberProper45@cluster0.lnz11yi.mongodb.net/?retryWrites=true&w=majority"
 );
@@ -45,6 +45,7 @@ const UserSchema = new mongoose.Schema({
 const User = mongoose.model("User", UserSchema);
 const Note = mongoose.model("Note", NoteSchema);
 
+/** Routes */
 //register new user
 app.post("/register", (req, res) => {
   const newUser = new User({
@@ -82,47 +83,49 @@ app.get("/login", (req, res) => {
   );
 });
 
-//fetches notes for given _id of user
-app.get("/notes/:userId", (req, res) => {
-  const userId = req.params.userId;
-  User.findOne(
-    {
-      _id: userId,
-    },
-    function (err, foundUser) {
-      if (foundUser) {
-        res.send(foundUser.notes);
-      } else {
-        res.send(`User does not exist for id ${userId}`);
+app
+  .route("/notes/:userId")
+  //fetches notes for given _id of user
+  .get((req, res) => {
+    const userId = req.params.userId;
+    User.findOne(
+      {
+        _id: userId,
+      },
+      function (err, foundUser) {
+        if (foundUser) {
+          res.send(foundUser.notes);
+        } else {
+          res.send(`User does not exist for id ${userId}`);
+        }
       }
-    }
-  );
-});
+    );
+  })
 
-//add new note for a given user ID.
-app.put("/notes/:userId", (req, res) => {
-  const userId = req.params.userId;
-  const newNote = new Note({
-    title: req.body.title,
-    content: req.body.content,
+  //add new note for a given user ID.
+  .put((req, res) => {
+    const userId = req.params.userId;
+    const newNote = new Note({
+      title: req.body.title,
+      content: req.body.content,
+    });
+
+    User.findOneAndUpdate(
+      {
+        _id: userId,
+      },
+      {
+        $push: { notes: newNote },
+      },
+      function (err, success) {
+        if (err) {
+          res.send(`Could not add note for reason ${err}`);
+        } else {
+          res.send(`Was able to add note: ${newNote}`);
+        }
+      }
+    );
   });
-
-  User.findOneAndUpdate(
-    {
-      _id: userId,
-    },
-    {
-      $push: { notes: newNote },
-    },
-    function (err, success) {
-      if (err) {
-        res.send(`Could not add note for reason ${err}`);
-      } else {
-        res.send(`Was able to add note: ${newNote}`);
-      }
-    }
-  );
-});
 
 app.delete("/notes/:userId/:noteId", (req, res) => {
   const userId = req.params.userId;

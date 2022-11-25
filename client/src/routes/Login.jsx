@@ -4,17 +4,16 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  //variables
   const [loginResultString, setLoginResult] = React.useState(null);
-
   const [loginData, setLoginData] = React.useState({
     username: "",
     password: "",
   });
-
   const [cookie, setCookie] = useCookies(["user"]);
-
   const navigate = useNavigate();
 
+  //functions
   function handleLoginUpdate(event) {
     const { name, value } = event.target;
     setLoginData((prevValue) => {
