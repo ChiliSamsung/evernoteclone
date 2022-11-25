@@ -4,10 +4,6 @@ body {
     background-color: #eee;
 }
 
-input {
-    autocomplete: off;
-}
-
 button {
     margin: 5px;
 }
@@ -19,6 +15,7 @@ header {
     margin: auto -16px;
     padding: 16px 32px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+    cursor: pointer;
 }
 
 header h1 {
@@ -41,6 +38,7 @@ header h1 span {
     width: 240px;
     margin: 16px;
     float: left;
+    cursor: pointer;
 }
 
 
@@ -103,7 +101,6 @@ form.create-note button {
 
 
 /** note component **/
-
 .note button {
     position: relative;
     float: right;
@@ -115,4 +112,40 @@ form.create-note button {
     cursor: pointer;
     outline: none;
     background-color: #FFFFFF;
+}
+
+/** full note page **/
+.note-page {
+    background: #fff;
+    border-radius: 7px;
+    box-shadow: 0 2px 5px #ccc;
+    padding: 16px 16px 50px 16px;
+    width: 50%;
+    margin: 24px auto;
+    display: block;
+    position: relative;
+}
+
+.note-page-button-container {
+    right: 10px;
+    position: absolute;
+}
+
+form.edit-note {
+    position: relative;
+    background: #fff;
+    border-radius: 7px;
+    margin-bottom: 10px;
+}
+
+form.edit-note input,
+form.edit-note textarea {
+    width: 100%;
+    border: none;
+    padding: 4px;
+    outline: none;
+    font-size: 1.2em;
+    font-family: inherit;
+    resize: none;
+    box-shadow: 0 1px 1px #ccc;
 }

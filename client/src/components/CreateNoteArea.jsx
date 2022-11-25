@@ -18,7 +18,7 @@ function CreateNoteArea(props) {
 
   return (
     <div>
-      <form className="create-note">
+      <form className="create-note" autoComplete="off">
         <input
           name="title"
           type="text"

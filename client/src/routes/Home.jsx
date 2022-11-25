@@ -63,8 +63,6 @@ function Home() {
     );
   }
 
-  console.log(notes);
-
   return (
     <div>
       <Header />
@@ -77,6 +75,10 @@ function Home() {
             title={note.title}
             content={note.content}
             deleteNote={deleteNote}
+            onClick={() => {
+              console.log("hmmm");
+              navigate(`/notes/${note._id}`);
+            }}
           />
         );
       })}
