@@ -44,8 +44,6 @@ export default function FullNotePage(props) {
     fetch(`/notes/${cookies.LoggedInUsername}/${noteId}`, requestOptions, []);
   }
 
-  console.log(cookies.LoggedInUsername + " " + noteId);
-
   //load note data
   useEffect(() => {
     const queryString = `/notes/${cookies.LoggedInUsername}/${noteId}`;

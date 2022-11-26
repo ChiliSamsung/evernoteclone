@@ -30,6 +30,14 @@ const NoteSchema = new mongoose.Schema({
   content: String,
 });
 
+const NotebookSchema = new mongoose.Schema({
+  name: {
+    required: true,
+    type: String,
+  },
+  notes: [NoteSchema],
+});
+
 const UserSchema = new mongoose.Schema({
   username: {
     required: true,
@@ -40,10 +48,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
   },
   notes: [NoteSchema],
+  notebooks: [NotebookSchema],
 });
 
 const User = mongoose.model("User", UserSchema);
 const Note = mongoose.model("Note", NoteSchema);
+const Notebook = mongoose.model("Notebook", NotebookSchema);
 
 /** Routes */
 //register new user
@@ -155,7 +165,6 @@ app
       title: newTitle,
       content: newContent,
     };
-
     User.findOneAndUpdate(
       {
         _id: userId,
@@ -191,6 +200,99 @@ app
         } else {
           res.send(`Was able to delete note for user ${userId}`);
         }
+      }
+    );
+  });
+
+/*** notebook stuff **/
+//add new notebook
+app.post("/:userId/newnotebook", (req, res) => {
+  const newNotebook = new Notebook({
+    name: req.body.notebookName,
+  });
+  User.findOneAndUpdate(
+    {
+      _id: req.params.userId,
+    },
+    {
+      $push: { notebooks: newNotebook },
+    },
+    function (err, success) {
+      res.status(success ? 200 : 404);
+      res.send(`Error: ${err} Success: ${success}`);
+    }
+  );
+});
+
+//get all the notebooks for a given user
+app.get("/notebooks/:userId", (req, res) => {
+  User.findOne({ _id: req.params.userId }, (err, foundUser) => {
+    if (foundUser) {
+      res.status(200);
+      res.send(foundUser.notebooks);
+      return;
+    }
+    res.status(404);
+    res.send("No notebooks found");
+  });
+});
+
+app
+  .route("/:userId/:notebookId")
+  //get existing notes for a notebook
+  .get((req, res) => {
+    User.findOne({ _id: req.params.userId }, (err, foundUser) => {
+      if (foundUser) {
+        const notebook = foundUser.notebooks.find(
+          (note) => note._id == req.params.notebookId
+        );
+        if (notebook) {
+          res.send(notebook.notes);
+          return;
+        }
+      }
+      res.send(`Error ${err}`);
+    });
+  })
+
+  //add existing note to notebook
+  .patch((req, res) => {
+    const userId = req.params.userId;
+    const noteId = req.body.noteId;
+    User.findById(userId, function (err, foundUser) {
+      if (foundUser) {
+        const foundNote = foundUser.notes.find((note) => note._id == noteId);
+        if (foundNote) {
+          User.findOneAndUpdate(
+            {
+              _id: userId,
+              "notebooks._id": req.params.notebookId,
+            },
+            {
+              $push: { "notebooks.$.notes": foundNote },
+            },
+            function (err, success) {
+              res.send(`Error: ${err} Success: ${success}`);
+            }
+          );
+          return;
+        }
+      }
+      res.status(404);
+      return res.send("Note note found");
+    });
+  })
+  //delete existing notebook
+  .delete((req, res) => {
+    User.findOneAndUpdate(
+      {
+        _id: req.params.userId,
+      },
+      {
+        $pull: { notebooks: { _id: req.params.notebookId } },
+      },
+      function (err, success) {
+        res.send(`Error: ${err} Succcess: ${success}`);
       }
     );
   });

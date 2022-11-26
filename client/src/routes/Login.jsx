@@ -10,7 +10,7 @@ export default function Login() {
     username: "",
     password: "",
   });
-  const [cookie, setCookie] = useCookies(["user"]);
+  const [cookies, setCookie] = useCookies(["user"]);
   const navigate = useNavigate();
 
   //functions
@@ -28,11 +28,9 @@ export default function Login() {
     const username = loginData.username;
     const password = loginData.password;
     const queryString = `/login?username=${username}&password=${password}`;
-    console.log(queryString);
     fetch(queryString)
       .then((res) => res.json())
       .then((responseJson) => {
-        console.log(responseJson);
         if (responseJson !== "Incorrect Login") {
           const options = {
             path: "/",
@@ -60,7 +58,6 @@ export default function Login() {
       body: JSON.stringify(newUser),
     };
     fetch("/register", requestOptions).then((res) => {
-      console.log(res);
       if (res.ok) {
         setLoginResult(`Register succeeded Try logging in.`);
       } else {

@@ -6,6 +6,8 @@ import { CookiesProvider } from "react-cookie";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./routes/Login.jsx";
 import FullNotePage from "./pages/FullNotePage.jsx";
+import NotebooksPage from "./pages/NotebooksPage.jsx";
+import NotebookPage from "./pages/NotebookPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,14 @@ const router = createBrowserRouter([
   {
     path: "/notes/:noteId",
     element: <FullNotePage />,
+  },
+  {
+    path: "/notebooks",
+    element: <NotebooksPage />,
+  },
+  {
+    path: "/notebook/:notebookId",
+    element: <NotebookPage />,
   },
 ]);
 

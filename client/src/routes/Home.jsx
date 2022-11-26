@@ -4,6 +4,7 @@ import CreateNoteArea from "../components/CreateNoteArea.jsx";
 import Header from "../components/Header.jsx";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 
 function Home() {
   const [notes, setNotes] = React.useState([]);
@@ -67,21 +68,28 @@ function Home() {
     <div>
       <Header />
       <CreateNoteArea addNote={addNote} />
-      {notes.map((note) => {
-        return (
-          <Note
-            key={note._id}
-            id={note._id}
-            title={note.title}
-            content={note.content}
-            deleteNote={deleteNote}
-            onClick={() => {
-              console.log("hmmm");
-              navigate(`/notes/${note._id}`);
-            }}
-          />
-        );
-      })}
+      <button
+        className="open-notebooks"
+        onClick={() => {
+          navigate("/notebooks");
+        }}
+      >
+        Open Notebooks
+        <TextSnippetIcon />
+      </button>
+      <div className="notes-container">
+        {notes.map((note) => {
+          return (
+            <Note
+              key={note._id}
+              id={note._id}
+              title={note.title}
+              content={note.content}
+              deleteNote={deleteNote}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
