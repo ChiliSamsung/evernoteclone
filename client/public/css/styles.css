@@ -180,3 +180,8 @@ form.edit-note textarea {
     margin: 16px auto;
     width: 30%;
 }
+
+.edit-note > label {
+    display:block;
+    padding: 10px 0px;
+}

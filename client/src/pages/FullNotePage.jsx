@@ -6,14 +6,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import Header from "../components/Header";
 
-export default function FullNotePage(props) {
+export default function FullNotePage() {
   const navigate = useNavigate();
   const [noteData, setNoteData] = React.useState({
     title: "",
     content: "",
   });
-  const [cookies] = useCookies(["user"]);
   const [isInEditMode, setIsInEditMode] = React.useState(false);
+  const [selectedNotebookId, setSelectedNotebookId] = React.useState("");
+  const [notebooks, setNotebooks] = React.useState([]);
+  const [cookies] = useCookies(["user"]);
   const { noteId } = useParams();
 
   function deleteNote() {
@@ -35,6 +37,7 @@ export default function FullNotePage(props) {
   }
 
   function handleSaveEditNote() {
+    //save the note title,content update
     const newNote = { title: noteData.title, content: noteData.content };
     const requestOptions = {
       method: "PATCH",
@@ -42,6 +45,17 @@ export default function FullNotePage(props) {
       body: JSON.stringify(newNote),
     };
     fetch(`/notes/${cookies.LoggedInUsername}/${noteId}`, requestOptions, []);
+    //save the note in new notebook
+    const notebookRequestOptions = {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ noteId: noteId }),
+    };
+    fetch(
+      `/${cookies.LoggedInUsername}/${selectedNotebookId}`,
+      notebookRequestOptions,
+      []
+    );
   }
 
   //load note data
@@ -57,6 +71,23 @@ export default function FullNotePage(props) {
       });
   }, [cookies, navigate, noteId]);
 
+  //load notebook list
+  useEffect(() => {
+    const queryString = `/notebooks/${cookies.LoggedInUsername}`;
+    fetch(queryString)
+      .then((res) => res.json())
+      .then((responseJson) => {
+        setNotebooks(responseJson);
+        setSelectedNotebookId(responseJson[0]._id);
+      });
+  }, [cookies, navigate]);
+
+  //handle selector change
+  function handleSelectorChange(event) {
+    const selectedNotebookId = event.target.value;
+    setSelectedNotebookId(selectedNotebookId);
+  }
+
   let icon;
   if (isInEditMode) {
     icon = <SaveIcon />;
@@ -68,19 +99,37 @@ export default function FullNotePage(props) {
   if (isInEditMode) {
     fullNoteContent = (
       <form className="edit-note" autoComplete="off">
-        <input
-          name="title"
-          type="text"
-          value={noteData.title}
-          onChange={handleFormUpdate}
-        />
-        <textarea
-          name="content"
-          placeholder="Lorem Ipsum"
-          value={noteData.content}
-          rows="5"
-          onChange={handleFormUpdate}
-        />
+        <label>
+          Title:
+          <input
+            name="title"
+            type="text"
+            value={noteData.title}
+            onChange={handleFormUpdate}
+          />
+        </label>
+        <label>
+          Content:
+          <textarea
+            name="content"
+            placeholder="Lorem Ipsum"
+            value={noteData.content}
+            rows="5"
+            onChange={handleFormUpdate}
+          />
+        </label>
+        <label>
+          Notebook:
+          <select value={selectedNotebookId} onChange={handleSelectorChange}>
+            {notebooks.map((notebook, index) => {
+              return (
+                <option key={index} value={notebook._id}>
+                  {notebook.name}
+                </option>
+              );
+            })}
+          </select>
+        </label>
       </form>
     );
   } else {

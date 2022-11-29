@@ -263,13 +263,26 @@ app
       if (foundUser) {
         const foundNote = foundUser.notes.find((note) => note._id == noteId);
         if (foundNote) {
+          //remove note from any existing notebooks
+          User.findOneAndUpdate(
+            {
+              _id: userId,
+              "notebooks.notes": { $elemMatch: { foundNote } },
+            },
+            {
+              $pull: { "notebooks.$.notes": foundNote },
+            },
+            function (err, success) {}
+          );
+
+          //add note to the new notebook
           User.findOneAndUpdate(
             {
               _id: userId,
               "notebooks._id": req.params.notebookId,
             },
             {
-              $push: { "notebooks.$.notes": foundNote },
+              $addToSet: { "notebooks.$.notes": foundNote },
             },
             function (err, success) {
               res.send(`Error: ${err} Success: ${success}`);
@@ -279,7 +292,7 @@ app
         }
       }
       res.status(404);
-      return res.send("Note note found");
+      return res.send("Note not found");
     });
   })
   //delete existing notebook
