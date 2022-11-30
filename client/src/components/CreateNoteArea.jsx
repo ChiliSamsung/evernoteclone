@@ -1,4 +1,7 @@
 import React from "react";
+import FormInput from "./FormInput";
+import FormSubmitButton from "./FormSubmitButton";
+import FormTextArea from "./FormTextArea";
 
 function CreateNoteArea(props) {
   const [formInfo, setFormInfo] = React.useState({
@@ -6,47 +9,33 @@ function CreateNoteArea(props) {
     content: "",
   });
 
-  function handleFormUpdate(event) {
-    const { name, value } = event.target;
-    setFormInfo((prevValue) => {
-      return {
-        ...prevValue,
-        [name]: value,
-      };
-    });
-  }
-
   return (
     <div>
       <form className="create-note" autoComplete="off">
-        <input
-          name="title"
+        <FormInput
           type="text"
+          labelName="title"
           placeholder="Title"
-          value={formInfo.title}
-          onChange={handleFormUpdate}
+          labelValue={formInfo.title}
+          setFormData={setFormInfo}
         />
-        <textarea
+        <FormTextArea
           name="content"
-          placeholder="Lorem Ipsum"
+          placeholder="Note Content Lorem Ipsum"
           value={formInfo.content}
-          rows="3"
-          onChange={handleFormUpdate}
+          numRows="3"
+          setFormData={setFormInfo}
         />
-
-        <button
-          type="submit"
-          onClick={(event) => {
+        <FormSubmitButton
+          buttonTitle="+"
+          submitHandler={() => {
             props.addNote(formInfo);
             setFormInfo({
               title: "",
               content: "",
             });
-            event.preventDefault();
           }}
-        >
-          +
-        </button>
+        />
       </form>
     </div>
   );

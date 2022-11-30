@@ -3,7 +3,7 @@ import React from "react";
 function FormSubmitButton(props) {
   return (
     <button
-      className="login-submit"
+      className={props.customClassName}
       type="submit"
       onClick={(event) => {
         props.submitHandler();

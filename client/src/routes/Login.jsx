@@ -58,6 +58,7 @@ export default function Login() {
       <div className="login-form">
         <form autoComplete="off">
           <FormInput
+            customClassName="login-input"
             type="text"
             labelTitle="Username:"
             labelName="username"
@@ -65,14 +66,20 @@ export default function Login() {
             setFormData={setLoginData}
           />
           <FormInput
+            customClassName="login-input"
             type="password"
             labelTitle="Password:"
             labelName="password"
             labelValue={loginData.password}
             setFormData={setLoginData}
           />
-          <FormSubmitButton submitHandler={handleLogin} buttonTitle="Login" />
           <FormSubmitButton
+            customClassName="login-submit"
+            submitHandler={handleLogin}
+            buttonTitle="Login"
+          />
+          <FormSubmitButton
+            customClassName="login-submit"
             submitHandler={handleRegister}
             buttonTitle="Register"
           />

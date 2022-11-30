@@ -1,6 +1,6 @@
 import React from "react";
 
-function FormInput(props) {
+function FormTextArea(props) {
   /* form input receives value and setter and uses them 
   to update the passed data object with its own state,
   plus the values of any other inputs are preserved.
@@ -16,17 +16,14 @@ function FormInput(props) {
   }
 
   return (
-    <div className={props.customClassName}>
-      <label>{props.labelTitle}</label>
-      <input
-        type={props.type}
-        name={props.labelName}
-        value={props.labelValue}
-        placeholder={props.placeholder}
-        onChange={handleInputUpdate}
-      />
-    </div>
+    <textarea
+      name={props.name}
+      placeholder={props.placeholder}
+      value={props.value}
+      rows={props.numRows}
+      onChange={handleInputUpdate}
+    />
   );
 }
 
-export default FormInput;
+export default FormTextArea;
