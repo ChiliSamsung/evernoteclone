@@ -5,6 +5,8 @@ import SaveIcon from "@mui/icons-material/Save";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import Header from "../components/Header";
+import FormInput from "../components/FormInput";
+import FormTextArea from "../components/FormTextArea";
 
 export default function FullNotePage() {
   const navigate = useNavigate();
@@ -18,6 +20,25 @@ export default function FullNotePage() {
   const [cookies] = useCookies(["user"]);
   const { noteId } = useParams();
 
+  /** button click or update event handlers */
+  function handleSelectorChange(event) {
+    const selectedNotebookId = event.target.value;
+    setSelectedNotebookId(selectedNotebookId);
+  }
+
+  function saveEditButtonClick() {
+    if (isInEditMode) {
+      handleSaveEditNote();
+    }
+    setIsInEditMode(!isInEditMode);
+  }
+
+  function deleteButtonClick() {
+    deleteNote();
+    navigate("/");
+  }
+
+  /** calls to backend API */
   function deleteNote() {
     const requestOptions = {
       method: "DELETE",
@@ -26,26 +47,17 @@ export default function FullNotePage() {
     fetch(`/notes/${cookies.LoggedInUsername}/${noteId}`, requestOptions);
   }
 
-  function handleFormUpdate(event) {
-    const { name, value } = event.target;
-    setNoteData((prevValue) => {
-      return {
-        ...prevValue,
-        [name]: value,
-      };
-    });
-  }
-
   function handleSaveEditNote() {
-    //save the note title,content update
-    const newNote = { title: noteData.title, content: noteData.content };
+    //save the note title,content update. Then save note into notebook
     const requestOptions = {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newNote),
+      body: JSON.stringify({
+        title: noteData.title,
+        content: noteData.content,
+      }),
     };
     fetch(`/notes/${cookies.LoggedInUsername}/${noteId}`, requestOptions, []);
-    //save the note in new notebook
     const notebookRequestOptions = {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -60,8 +72,7 @@ export default function FullNotePage() {
 
   //load note data
   useEffect(() => {
-    const queryString = `/notes/${cookies.LoggedInUsername}/${noteId}`;
-    fetch(queryString)
+    fetch(`/notes/${cookies.LoggedInUsername}/${noteId}`)
       .then((res) => res.json())
       .then((responseJson) => {
         setNoteData({
@@ -73,8 +84,7 @@ export default function FullNotePage() {
 
   //load notebook list
   useEffect(() => {
-    const queryString = `/notebooks/${cookies.LoggedInUsername}`;
-    fetch(queryString)
+    fetch(`/notebooks/${cookies.LoggedInUsername}`)
       .then((res) => res.json())
       .then((responseJson) => {
         setNotebooks(responseJson);
@@ -82,42 +92,25 @@ export default function FullNotePage() {
       });
   }, [cookies, navigate]);
 
-  //handle selector change
-  function handleSelectorChange(event) {
-    const selectedNotebookId = event.target.value;
-    setSelectedNotebookId(selectedNotebookId);
-  }
-
-  let icon;
-  if (isInEditMode) {
-    icon = <SaveIcon />;
-  } else {
-    icon = <EditIcon />;
-  }
-
   let fullNoteContent;
   if (isInEditMode) {
     fullNoteContent = (
       <form className="edit-note" autoComplete="off">
-        <label>
-          Title:
-          <input
-            name="title"
-            type="text"
-            value={noteData.title}
-            onChange={handleFormUpdate}
-          />
-        </label>
-        <label>
-          Content:
-          <textarea
-            name="content"
-            placeholder="Lorem Ipsum"
-            value={noteData.content}
-            rows="5"
-            onChange={handleFormUpdate}
-          />
-        </label>
+        <FormInput
+          labelTitle="Title:"
+          labelName="title"
+          type="text"
+          labelValue={noteData.title}
+          setFormData={setNoteData}
+        />
+        <FormTextArea
+          labelTitle="Content:"
+          name="content"
+          value={noteData.content}
+          numRows="5"
+          setFormData={setNoteData}
+        />
+
         <label>
           Notebook:
           <select value={selectedNotebookId} onChange={handleSelectorChange}>
@@ -147,23 +140,10 @@ export default function FullNotePage() {
       <div className="note-page">
         {fullNoteContent}
         <div className="note-page-button-container">
-          <button
-            onClick={() => {
-              if (isInEditMode) {
-                handleSaveEditNote();
-              }
-              setIsInEditMode(!isInEditMode);
-            }}
-          >
-            {icon}
+          <button onClick={saveEditButtonClick}>
+            {isInEditMode ? <SaveIcon /> : <EditIcon />}
           </button>
-
-          <button
-            onClick={() => {
-              deleteNote();
-              navigate("/");
-            }}
-          >
+          <button onClick={deleteButtonClick}>
             <DeleteIcon />
           </button>
         </div>

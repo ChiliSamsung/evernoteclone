@@ -12,6 +12,7 @@ export default function Login() {
     username: "",
     password: "",
   });
+  // eslint-disable-next-line no-unused-vars
   const [cookies, setCookie] = useCookies(["user"]);
   const cookieOptions = {
     path: "/",

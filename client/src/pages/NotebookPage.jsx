@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Header.jsx";
 import { useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import Note from "../components/Note.jsx";
 
 export default function NotebookPage() {
   const [cookies] = useCookies(["user"]);
   const [notes, setNotes] = useState([]);
   const { notebookId } = useParams();
 
-  //useEffect with empty array ensures only runs the one time.
+  //load notes for this notebook
   useEffect(() => {
     const queryString = `/${cookies.LoggedInUsername}/${notebookId}`;
     fetch(queryString)
@@ -21,13 +22,15 @@ export default function NotebookPage() {
   function displayNotes(notes) {
     if (notes.length > 0) {
       return (
-        <div>
+        <div className="notes-container">
           {notes.map((note) => {
             return (
-              <div key={note._id}>
-                <h2>{note.title}</h2>
-                <p>{note.content}</p>
-              </div>
+              <Note
+                key={note._id}
+                id={note._id}
+                title={note.title}
+                content={note.content}
+              />
             );
           })}
         </div>
@@ -40,6 +43,7 @@ export default function NotebookPage() {
   return (
     <div>
       <Header />
+      <h2>Notebook ID: {notebookId}</h2>
       {displayNotes(notes)}
     </div>
   );

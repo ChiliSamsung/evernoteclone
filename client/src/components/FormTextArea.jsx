@@ -16,13 +16,16 @@ function FormTextArea(props) {
   }
 
   return (
-    <textarea
-      name={props.name}
-      placeholder={props.placeholder}
-      value={props.value}
-      rows={props.numRows}
-      onChange={handleInputUpdate}
-    />
+    <div>
+      <label>{props.labelTitle}</label>
+      <textarea
+        name={props.name}
+        placeholder={props.placeholder}
+        value={props.value}
+        rows={props.numRows}
+        onChange={handleInputUpdate}
+      />
+    </div>
   );
 }
 

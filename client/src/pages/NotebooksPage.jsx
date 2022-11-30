@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import FormInput from "../components/FormInput";
+import FormSubmitButton from "../components/FormSubmitButton";
 
 export default function NotebooksPage() {
   const [cookies] = useCookies(["user"]);
   const [notebooksList, setNotebooksList] = useState([]);
   const [addNotebookEnabled, setAddNotebookEnabled] = useState(false);
-  const [notebookName, setNotebookName] = useState("");
+  const [notebookName, setNotebookName] = useState({
+    name: "",
+  });
   const navigate = useNavigate();
 
   //load notebooks for current user
@@ -20,15 +24,10 @@ export default function NotebooksPage() {
       });
   }, [cookies]);
 
-  function handleAddNotebookChange(event) {
-    const { value } = event.target;
-    setNotebookName(value);
-  }
-
   function addNotebook() {
     const query = `/${cookies.LoggedInUsername}/newnotebook`;
     const requestBody = {
-      notebookName: notebookName,
+      notebookName: notebookName.name,
     };
     const requestOptions = {
       method: "POST",
@@ -50,41 +49,34 @@ export default function NotebooksPage() {
     });
   }
 
-  const addNotebookComponent = (
+  const addNotebookComponent = addNotebookEnabled ? (
     <div className="add-notebook-container">
       <form>
-        <label>Notebook:</label>
-        <input
-          value={notebookName}
-          placeholder="Notebook name"
-          onChange={handleAddNotebookChange}
-        ></input>
-        <button
-          onClick={(event) => {
-            event.preventDefault();
-            addNotebook();
-          }}
-        >
-          Submit
-        </button>
+        <FormInput
+          labelTitle="Notebook:"
+          labelName="name"
+          labelValue={notebookName.name}
+          setFormData={setNotebookName}
+          customClassName="add-notebook-input"
+        />
+        <FormSubmitButton buttonTitle="Submit" submitHandler={addNotebook} />
       </form>
     </div>
+  ) : (
+    <button
+      className="add-notebook"
+      onClick={() => {
+        setAddNotebookEnabled(true);
+      }}
+    >
+      Add Notebook
+    </button>
   );
 
   return (
     <div>
       <Header />
-      {addNotebookEnabled && addNotebookComponent}
-      {!addNotebookEnabled && (
-        <button
-          className="add-notebook"
-          onClick={() => {
-            setAddNotebookEnabled(true);
-          }}
-        >
-          Add Notebook
-        </button>
-      )}
+      {addNotebookComponent}
       <ul>
         {notebooksList.map((notebook) => {
           return (

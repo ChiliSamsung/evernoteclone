@@ -10,9 +10,9 @@ function Home() {
   const [notes, setNotes] = React.useState([]);
   const navigate = useNavigate();
   const [cookies] = useCookies(["user"]);
+  const loggedIn = cookies.LoggedIn;
 
-  let loggedIn = cookies.LoggedIn;
-  //useEffect with empty array ensures only runs the one time.
+  //load up the notes
   useEffect(() => {
     if (!loggedIn) {
       navigate("/login");
