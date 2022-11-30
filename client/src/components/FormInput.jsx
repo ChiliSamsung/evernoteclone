@@ -1,0 +1,31 @@
+import React from "react";
+
+function FormInput(props) {
+  /* form input receives value and setter and uses them 
+  to update the passed data object with its own state,
+  plus the values of any other inputs are preserved.
+  */
+  function handleInputUpdate(event) {
+    const { name, value } = event.target;
+    props.setFormData((prevValue) => {
+      return {
+        ...prevValue,
+        [name]: value,
+      };
+    });
+  }
+
+  return (
+    <div className="login-input">
+      <label>{props.labelTitle}</label>
+      <input
+        type={props.type}
+        name={props.labelName}
+        value={props.labelValue}
+        onChange={handleInputUpdate}
+      />
+    </div>
+  );
+}
+
+export default FormInput;
