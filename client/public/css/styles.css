@@ -92,13 +92,17 @@ form.create-note button {
 /** login route **/
 .login-form {
     position: relative;
-    margin: 5% 20%;
+    margin: 30% 35%;
     text-align: center;
+}
+
+.login-form h5 {
+    margin:0px 0px 20px 0px;
 }
 
 .login-input {
     width: 100%;
-    margin: 10px;
+    margin: 5px;
 }
 
 .login-input label {
@@ -106,7 +110,7 @@ form.create-note button {
 }
 
 .login-submit {
-    margin: 5px;
+    margin: 10px 5px 5px 0px;
 }
 
 

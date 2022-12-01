@@ -17,12 +17,13 @@ function FormInput(props) {
 
   return (
     <div className={props.customClassName}>
-      <label>{props.labelTitle}</label>
+      {props.labelTitle && <label>{props.labelTitle}</label>}
       <input
         type={props.type}
         name={props.labelName}
         value={props.labelValue}
         placeholder={props.placeholder}
+        className="form-control"
         onChange={handleInputUpdate}
       />
     </div>

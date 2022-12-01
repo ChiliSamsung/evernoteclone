@@ -56,39 +56,47 @@ export default function Login() {
   return (
     <div>
       <Header />
-      <div className="login-form">
+      <div class="login-form">
+        <img
+          className="mb-4"
+          src="../images/notebook-smile.png"
+          alt="icon"
+          width="108"
+          height="108"
+        />
+        <h5 className="login-header">
+          {!loginResultString
+            ? "Sign In or Register new Account"
+            : loginResultString}
+        </h5>
+
         <form autoComplete="off">
           <FormInput
             customClassName="login-input"
             type="text"
-            labelTitle="Username:"
             labelName="username"
+            placeholder="Username"
             labelValue={loginData.username}
             setFormData={setLoginData}
           />
           <FormInput
             customClassName="login-input"
             type="password"
-            labelTitle="Password:"
             labelName="password"
+            placeholder="Password"
             labelValue={loginData.password}
             setFormData={setLoginData}
           />
           <FormSubmitButton
-            customClassName="login-submit"
+            customClassName="login-submit btn btn-md btn-primary btn-block"
             submitHandler={handleLogin}
             buttonTitle="Login"
           />
           <FormSubmitButton
-            customClassName="login-submit"
+            customClassName="login-submit btn btn-md btn-primary btn-block"
             submitHandler={handleRegister}
             buttonTitle="Register"
           />
-          <p>
-            {!loginResultString
-              ? "Sign In or Register new Account"
-              : loginResultString}
-          </p>
         </form>
       </div>
     </div>
