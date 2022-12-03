@@ -8,6 +8,12 @@ button {
     margin: 5px;
 }
 
+h3 {
+    overflow: hidden;
+    text-overflow: "...";
+    white-space: nowrap;
+    line-height: normal;
+}
 
 /** header component **/
 header {
@@ -44,11 +50,6 @@ header h1 span {
 
 .note-h3 {
     font-size: 1.5rem;
-    overflow: hidden;
-    text-overflow: "...";
-    white-space: nowrap;
-    line-height: normal;
-    font-weight: bold;
 }
 
 .note-p {
@@ -150,7 +151,8 @@ hr.rounded {
 /** login route **/
 .login-form {
     position: relative;
-    margin: 10% 35%;
+    margin: 10% auto;
+    max-width: 370px;
     text-align: center;
 }
 
@@ -212,24 +214,39 @@ form.edit-note textarea {
 
 .add-notebook {
     display: block;
-    margin: 16px auto;
+    margin: 5px auto;
+    font-size: 1rem;
 }
 
 .add-notebook-input {
     display: inline;
 }
 
-.notebook-container {
-    box-shadow: 0 2px 5px #ccc;
+.notebook-container {    
     width: 25%;
-    padding: 1px 12px 1px 12px;
-    margin: 10px;
+    height: 140px;
+    padding: 6px 12px;
+    margin: 2% 3%;
+    box-shadow: 0 4px 8px #555;
+    background-color: #00773b;
     float: left;
+}
+
+.notebook-container h3 {
+    font-weight: 600;
+    color: #FFF;
+}
+
+.notebook-container p {
+    margin-top: 10px;
+    color: black;
+    font-weight: 600;
+    font-size: 1.25rem;
 }
 
 .add-notebook-container {
     display: block;
-    margin: 16px auto;
+    margin: 40px auto 15px auto;
     width: 30%;
 }
 

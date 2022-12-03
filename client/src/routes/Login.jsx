@@ -56,7 +56,7 @@ export default function Login() {
   return (
     <div>
       <Header />
-      <div class="login-form">
+      <div className="login-form">
         <img
           className="mb-4"
           src="../images/notebook-smile.png"

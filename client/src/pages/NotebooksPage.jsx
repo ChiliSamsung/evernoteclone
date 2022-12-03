@@ -13,6 +13,7 @@ export default function NotebooksPage() {
     name: "",
   });
   const navigate = useNavigate();
+  const emptyNotebookName = "{No Name}";
 
   //load notebooks for current user
   useEffect(() => {
@@ -50,21 +51,24 @@ export default function NotebooksPage() {
   }
 
   const addNotebookComponent = addNotebookEnabled ? (
-    <div className="add-notebook-container">
-      <form>
-        <FormInput
-          labelTitle="Notebook:"
-          labelName="name"
-          labelValue={notebookName.name}
-          setFormData={setNotebookName}
-          customClassName="add-notebook-input"
-        />
-        <FormSubmitButton buttonTitle="Submit" submitHandler={addNotebook} />
-      </form>
-    </div>
+    <form>
+      <FormInput
+        labelTitle="Notebook:"
+        labelName="name"
+        placeholder="New notebook name"
+        labelValue={notebookName.name}
+        setFormData={setNotebookName}
+        customClassName="add-notebook-input"
+      />
+      <FormSubmitButton
+        buttonTitle="Submit"
+        submitHandler={addNotebook}
+        customClassName={"add-notebook btn btn-md btn-primary btn-block"}
+      />
+    </form>
   ) : (
     <button
-      className="add-notebook"
+      className="add-notebook btn btn-md btn-primary btn-block"
       onClick={() => {
         setAddNotebookEnabled(true);
       }}
@@ -76,7 +80,7 @@ export default function NotebooksPage() {
   return (
     <div>
       <Header />
-      {addNotebookComponent}
+      <div className="add-notebook-container">{addNotebookComponent}</div>
       <ul>
         {notebooksList.map((notebook) => {
           return (
@@ -87,7 +91,7 @@ export default function NotebooksPage() {
                 navigate(`/notebook/${notebook._id}`);
               }}
             >
-              <h3>{notebook.name}</h3>
+              <h3>{notebook.name ? notebook.name : emptyNotebookName}</h3>
               <p>{notebook.notes.length} Notes</p>
             </div>
           );
