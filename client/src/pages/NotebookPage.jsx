@@ -7,6 +7,7 @@ import Note from "../components/Note.jsx";
 export default function NotebookPage() {
   const [cookies] = useCookies(["user"]);
   const [notes, setNotes] = useState([]);
+  const [notebookName, setNotebookName] = useState("");
   const { notebookId } = useParams();
 
   //load notes for this notebook
@@ -15,7 +16,9 @@ export default function NotebookPage() {
     fetch(queryString)
       .then((res) => res.json())
       .then((responseJson) => {
-        setNotes(responseJson);
+        const notebook = responseJson;
+        setNotes(notebook.notes);
+        setNotebookName(notebook.name);
       });
   }, [cookies, notebookId]);
 
@@ -43,8 +46,10 @@ export default function NotebookPage() {
   return (
     <div>
       <Header />
-      <h2>Notebook ID: {notebookId}</h2>
-      {displayNotes(notes)}
+      <div className="notebook-page-content-container">
+        <h3 className="notebook-page-name">{notebookName}</h3>
+        {displayNotes(notes)}
+      </div>
     </div>
   );
 }

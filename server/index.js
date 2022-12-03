@@ -239,7 +239,7 @@ app.get("/notebooks/:userId", (req, res) => {
 
 app
   .route("/:userId/:notebookId")
-  //get existing notes for a notebook
+  //return notebok for a given notebook ID.
   .get((req, res) => {
     User.findOne({ _id: req.params.userId }, (err, foundUser) => {
       if (foundUser) {
@@ -247,7 +247,7 @@ app
           (note) => note._id == req.params.notebookId
         );
         if (notebook) {
-          res.send(notebook.notes);
+          res.send(notebook);
           return;
         }
       }

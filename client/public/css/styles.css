@@ -34,6 +34,7 @@ header h1 span {
     margin-right: 0.5rem;
 }
 
+
 /** generic note **/
 .note {
     position: relative;
@@ -77,6 +78,7 @@ header h1 span {
     background-color: #eee;
 }
 
+
 /** Create note component **/
 form.create-note {
     position: relative;
@@ -118,6 +120,7 @@ form.create-note button {
 .add-note-button:hover {
     background: #f5a313;
 }
+
 
 /** home route **/
 .open-notebooks {
@@ -172,6 +175,7 @@ hr.rounded {
 .login-submit {
     margin: 10px 5px 5px 0px;
 }
+
 
 /** full note page **/
 .note-page {
@@ -253,4 +257,19 @@ form.edit-note textarea {
 .edit-note > label {
     display:block;
     padding: 10px 0px;
+}
+
+/** notebook page **/
+.notebook-page-content-container {
+    padding: 10px;
+    margin: 3%;
+    background-color: #CCC;
+    overflow: hidden;
+}
+
+.notebook-page-name {
+    text-decoration: underline;
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-left: 1rem;
 }
