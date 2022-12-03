@@ -11,9 +11,10 @@ function Note(props) {
         navigate(`/notes/${props.id}`);
       }}
     >
-      <h2>{props.title}</h2>
-      <p>{props.content}</p>
+      <h3 className="note-h3">{props.title}</h3>
+      <p className="note-p">{props.content}</p>
       <button
+        className="note-delete-button"
         onClick={() => {
           props.deleteNote(props.id);
         }}

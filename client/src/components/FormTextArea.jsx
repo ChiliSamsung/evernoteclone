@@ -17,12 +17,13 @@ function FormTextArea(props) {
 
   return (
     <div>
-      <label>{props.labelTitle}</label>
+      {props.labelTitle && <label>{props.labelTitle}</label>}
       <textarea
         name={props.name}
         placeholder={props.placeholder}
         value={props.value}
         rows={props.numRows}
+        className="form-control"
         onChange={handleInputUpdate}
       />
     </div>

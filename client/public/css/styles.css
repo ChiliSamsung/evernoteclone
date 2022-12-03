@@ -28,24 +28,59 @@ header h1 span {
     margin-right: 0.5rem;
 }
 
-
-/** home route **/
+/** generic note **/
 .note {
+    position: relative;
     background: #fff;
     border-radius: 7px;
-    box-shadow: 0 2px 5px #ccc;
-    padding: 10px;
+    box-shadow: 0 2px 5px #bbb;
+    padding: 5px 10px;
     width: 240px;
+    height: 160px;
     margin: 16px;
     float: left;
     cursor: pointer;
 }
 
+.note-h3 {
+    font-size: 1.5rem;
+    overflow: hidden;
+    text-overflow: "...";
+    white-space: nowrap;
+    line-height: normal;
+    font-weight: bold;
+}
 
+.note-p {
+    font-size: 1rem;
+    overflow: clip;
+    max-height: 4.5rem;
+}
+
+.note-delete-button {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    color: #f5ba13;
+    border: none;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    outline: none;
+    background-color: #FFFFFF;
+}
+
+.note-delete-button:hover {
+    color: #f5a313;
+    border-radius: 50%;
+    background-color: #eee;
+}
+
+/** Create note component **/
 form.create-note {
     position: relative;
     width: 480px;
-    margin: 30px auto 20px auto;
+    margin: 5% auto 20px auto;
     background: #fff;
     padding: 15px;
     border-radius: 7px;
@@ -63,6 +98,7 @@ form.create-note textarea {
     resize: none;
 }
 
+
 form.create-note button {
     position: absolute;
     right: 18px;
@@ -78,21 +114,43 @@ form.create-note button {
     outline: none;
 }
 
+.add-note-button:hover {
+    background: #f5a313;
+}
+
+/** home route **/
 .open-notebooks {
-    margin: 10px auto;
+    margin: 10px auto 30px auto;
     display: flex;
     position: relative;
     text-align: center;
     align-items: center;
     flex-wrap: wrap;
-    padding: 5px
+    padding: 5px;
+    background-color: #1eb52d;
+    border-color:  #1eb52d;
+}
+
+.open-notebooks:hover {
+    background-color: #134ef5;
+    border-color:  #134ef5;
+}
+
+.notes-container {
+    margin: 30px 5%;
+}
+
+hr.rounded {
+    border-top: 5px solid #999;
+    border-radius: 5px;
+    margin: 0px 5%;
 }
 
 
 /** login route **/
 .login-form {
     position: relative;
-    margin: 30% 35%;
+    margin: 10% 35%;
     text-align: center;
 }
 
@@ -111,21 +169,6 @@ form.create-note button {
 
 .login-submit {
     margin: 10px 5px 5px 0px;
-}
-
-
-/** note component **/
-.note button {
-    position: relative;
-    float: right;
-    margin-right: 10px;
-    color: #f5ba13;
-    border: none;
-    width: 36px;
-    height: 36px;
-    cursor: pointer;
-    outline: none;
-    background-color: #FFFFFF;
 }
 
 /** full note page **/

@@ -69,7 +69,7 @@ function Home() {
       <Header />
       <CreateNoteArea addNote={addNote} />
       <button
-        className="open-notebooks"
+        className="open-notebooks btn btn-md btn-primary btn-block"
         onClick={() => {
           navigate("/notebooks");
         }}
@@ -77,6 +77,7 @@ function Home() {
         Open Notebooks
         <TextSnippetIcon />
       </button>
+      <hr className="rounded" />
       <div className="notes-container">
         {notes.map((note) => {
           return (
