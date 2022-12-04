@@ -101,6 +101,7 @@ export default function FullNotePage() {
           labelName="title"
           type="text"
           labelValue={noteData.title}
+          customClassName="edit-forminput-title"
           setFormData={setNoteData}
         />
         <FormTextArea
@@ -108,21 +109,9 @@ export default function FullNotePage() {
           name="content"
           value={noteData.content}
           numRows="5"
+          customClassName="edit-formtextarea-content"
           setFormData={setNoteData}
         />
-
-        <label>
-          Notebook:
-          <select value={selectedNotebookId} onChange={handleSelectorChange}>
-            {notebooks.map((notebook, index) => {
-              return (
-                <option key={index} value={notebook._id}>
-                  {notebook.name}
-                </option>
-              );
-            })}
-          </select>
-        </label>
       </form>
     );
   } else {
@@ -139,11 +128,38 @@ export default function FullNotePage() {
       <Header />
       <div className="note-page">
         {fullNoteContent}
+
+        {isInEditMode && (
+          <div className="choose-notebook-label">
+            <label>
+              Notebook:
+              <select
+                value={selectedNotebookId}
+                className="form-select notebook-selector"
+                onChange={handleSelectorChange}
+              >
+                {notebooks.map((notebook, index) => {
+                  return (
+                    <option key={index} value={notebook._id}>
+                      {notebook.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </label>
+          </div>
+        )}
         <div className="note-page-button-container">
-          <button onClick={saveEditButtonClick}>
+          <button
+            className="edit-note-button btn btn-md btn-primary btn-block"
+            onClick={saveEditButtonClick}
+          >
             {isInEditMode ? <SaveIcon /> : <EditIcon />}
           </button>
-          <button onClick={deleteButtonClick}>
+          <button
+            className="edit-note-button btn btn-md btn-primary btn-block"
+            onClick={deleteButtonClick}
+          >
             <DeleteIcon />
           </button>
         </div>

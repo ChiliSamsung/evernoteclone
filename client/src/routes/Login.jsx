@@ -59,7 +59,7 @@ export default function Login() {
       <div className="login-form">
         <img
           className="mb-4"
-          src="../images/notebook-smile.png"
+          src="../resources/images/notebook-smile.png"
           alt="icon"
           width="108"
           height="108"

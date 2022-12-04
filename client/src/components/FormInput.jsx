@@ -17,7 +17,9 @@ function FormInput(props) {
 
   return (
     <div className={props.customClassName}>
-      {props.labelTitle && <label>{props.labelTitle}</label>}
+      {props.labelTitle && (
+        <label className="form-label">{props.labelTitle}</label>
+      )}
       <input
         type={props.type}
         name={props.labelName}
