@@ -6,7 +6,7 @@ function Note(props) {
   const navigate = useNavigate();
   return (
     <div
-      className="note"
+      className="note col-4"
       onClick={() => {
         navigate(`/notes/${props.id}`);
       }}

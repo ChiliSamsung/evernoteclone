@@ -8,6 +8,12 @@ import Login from "./routes/Login.jsx";
 import FullNotePage from "./pages/FullNotePage.jsx";
 import NotebooksPage from "./pages/NotebooksPage.jsx";
 import NotebookPage from "./pages/NotebookPage.jsx";
+import Logout from "./components/Logout.jsx";
+
+const cookies = document.cookie;
+const isLoggedIn = cookies.includes("LoggedIn=true");
+console.log(cookies);
+console.log(`isLoggedIn ${isLoggedIn}`);
 
 const router = createBrowserRouter([
   {
@@ -30,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/notebook/:notebookId",
     element: <NotebookPage />,
+  },
+  {
+    path: "/logout",
+    element: <Logout />,
   },
 ]);
 

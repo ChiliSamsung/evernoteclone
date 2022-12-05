@@ -78,7 +78,7 @@ function Home() {
         <TextSnippetIcon />
       </button>
       <hr className="rounded" />
-      <div className="notes-container">
+      <div className="notes-container mt-5 row">
         {notes.map((note) => {
           return (
             <Note

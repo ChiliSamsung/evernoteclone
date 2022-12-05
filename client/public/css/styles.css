@@ -21,13 +21,22 @@ header {
     margin: auto -16px;
     padding: 16px 32px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
-    cursor: pointer;
 }
 
 header h1 {
     color: white;
     font-family: Montserrat;
     font-weight: 700;
+    display:inline;
+    cursor: pointer;
+}
+
+.header-end-items {
+    display:inline;
+    position:absolute;
+    top: 1.5rem;
+    right: 2rem;
+    cursor: pointer;
 }
 
 header h1 span {
@@ -44,6 +53,7 @@ header h1 span {
 
 /** generic note **/
 .note {
+    display: grid;
     position: relative;
     background: #fff;
     border-radius: 7px;
@@ -52,7 +62,6 @@ header h1 span {
     width: 240px;
     height: 160px;
     margin: 16px;
-    float: left;
     cursor: pointer;
 }
 
@@ -292,7 +301,6 @@ hr.rounded {
     padding: 10px 10px 30px 10px;
     margin: 3%;
     background-color: #007a3d;
-    overflow: hidden;
     background-image: url("../resources/images/cubes.png");
 }
 

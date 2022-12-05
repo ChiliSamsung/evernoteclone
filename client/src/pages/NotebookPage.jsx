@@ -25,7 +25,7 @@ export default function NotebookPage() {
   function displayNotes(notes) {
     if (notes.length > 0) {
       return (
-        <div className="notes-container">
+        <div className="notes-container row">
           {notes.map((note) => {
             return (
               <Note
