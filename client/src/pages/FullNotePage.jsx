@@ -48,7 +48,7 @@ export default function FullNotePage() {
   }
 
   function handleSaveEditNote() {
-    //save the note title,content update. Then save note into notebook
+    //save the note title,content update. And save note into notebook
     const requestOptions = {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
