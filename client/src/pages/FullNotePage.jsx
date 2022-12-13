@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
+import AddIcon from "@mui/icons-material/Add";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import Header from "../components/Header";
@@ -15,7 +16,17 @@ export default function FullNotePage() {
     content: "",
   });
   const [isInEditMode, setIsInEditMode] = React.useState(false);
+  const [isInAddTagMode, setIsInAddTagMode] = React.useState(false);
+  const [newTagString, setNewTagString] = React.useState({
+    title: "",
+  });
   const [selectedNotebookId, setSelectedNotebookId] = React.useState("");
+  const [dummyTags, setDummyTags] = React.useState([
+    "Never gonna",
+    "Eat",
+    "Soggy",
+    "Vegetables",
+  ]);
   const [notebooks, setNotebooks] = React.useState([]);
   const [cookies] = useCookies(["user"]);
   const { noteId } = useParams();
@@ -29,6 +40,7 @@ export default function FullNotePage() {
   function saveEditButtonClick() {
     if (isInEditMode) {
       handleSaveEditNote();
+      setIsInAddTagMode(false);
     }
     setIsInEditMode(!isInEditMode);
   }
@@ -68,6 +80,28 @@ export default function FullNotePage() {
       notebookRequestOptions,
       []
     );
+  }
+
+  function handleAddTagButtonClick() {
+    const newTag = newTagString.title;
+    if (isInAddTagMode && newTag) {
+      const newArray = [newTag].concat(dummyTags);
+      setDummyTags(newArray);
+      setNewTagString({
+        title: "",
+      });
+    } else {
+      setIsInAddTagMode(true);
+    }
+  }
+
+  function handleTagClick(indexToRemove) {
+    if (isInEditMode) {
+      const newTags = dummyTags.filter((tag, index) => {
+        return index !== indexToRemove;
+      });
+      setDummyTags(newTags);
+    }
   }
 
   //load note data
@@ -128,8 +162,7 @@ export default function FullNotePage() {
       <Header />
       <div className="note-page">
         {fullNoteContent}
-
-        {isInEditMode && (
+        <div className="full-note-grid-wrapper">
           <div className="choose-notebook-label">
             <label>
               Notebook:
@@ -148,20 +181,60 @@ export default function FullNotePage() {
               </select>
             </label>
           </div>
-        )}
-        <div className="note-page-button-container">
-          <button
-            className="edit-note-button btn btn-md btn-primary btn-block"
-            onClick={saveEditButtonClick}
-          >
-            {isInEditMode ? <SaveIcon /> : <EditIcon />}
-          </button>
-          <button
-            className="edit-note-button btn btn-md btn-primary btn-block"
-            onClick={deleteButtonClick}
-          >
-            <DeleteIcon />
-          </button>
+          <div className="tags-container">
+            <label>
+              Tags:
+              {isInEditMode && (
+                <button
+                  className="add-tag-button btn btn-primary"
+                  onClick={handleAddTagButtonClick}
+                >
+                  <AddIcon />
+                </button>
+              )}
+              {dummyTags
+                .filter((_, index) => {
+                  return index < 3;
+                })
+                .map((tag, index) => {
+                  return (
+                    <button
+                      className="btn btn-outline-secondary"
+                      key={index}
+                      onClick={() => {
+                        handleTagClick(index);
+                      }}
+                    >
+                      <span className="tag-button-text">{tag}</span>
+                    </button>
+                  );
+                })}
+            </label>
+          </div>
+          <div className="note-page-edit-buttons">
+            <button
+              className="edit-note-button btn btn-md btn-primary btn-block"
+              onClick={saveEditButtonClick}
+            >
+              {isInEditMode ? <SaveIcon /> : <EditIcon />}
+            </button>
+            <button
+              className="edit-note-button btn btn-md btn-primary btn-block"
+              onClick={deleteButtonClick}
+            >
+              <DeleteIcon />
+            </button>
+          </div>
+          {isInAddTagMode && (
+            <div className="add-tag-input-container">
+              <FormInput
+                labelName="title"
+                type="text"
+                labelValue={newTagString.title}
+                setFormData={setNewTagString}
+              ></FormInput>
+            </div>
+          )}
         </div>
       </div>
     </div>
