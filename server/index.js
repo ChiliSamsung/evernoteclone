@@ -28,6 +28,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/notesDB");
 const NoteSchema = new mongoose.Schema({
   title: String,
   content: String,
+  tags: [String],
 });
 
 const NotebookSchema = new mongoose.Schema({
@@ -49,6 +50,7 @@ const UserSchema = new mongoose.Schema({
   },
   notes: [NoteSchema],
   notebooks: [NotebookSchema],
+  tags: [String],
 });
 
 const User = mongoose.model("User", UserSchema);
@@ -114,9 +116,11 @@ app
   //add new note for a given user ID.
   .put((req, res) => {
     const userId = req.params.userId;
+    const noteTags = req.body.tags;
     const newNote = new Note({
       title: req.body.title,
       content: req.body.content,
+      tags: noteTags,
     });
 
     User.findOneAndUpdate(
@@ -125,6 +129,7 @@ app
       },
       {
         $push: { notes: newNote },
+        $addToSet: { tags: { $each: noteTags } },
       },
       function (err, success) {
         if (err) {
@@ -135,6 +140,22 @@ app
       }
     );
   });
+
+app.get("/notes/:userId/:filterTag", (req, res) => {
+  const filterByTag = req.params.filterTag;
+  User.findOne({ _id: req.params.userId }, (err, foundUser) => {
+    if (foundUser) {
+      const filteredNotes = foundUser.notes.filter((note) => {
+        return !note.tags.includes(filterByTag);
+      });
+      res.status(200);
+      res.send(filteredNotes);
+      return;
+    }
+    res.status(404);
+    res.send("No notes found for tag filter");
+  });
+});
 
 app
   .route("/notes/:userId/:noteId")
@@ -161,9 +182,11 @@ app
     const noteId = req.params.noteId;
     const newTitle = req.body.title;
     const newContent = req.body.content;
+    const newTags = req.body.tags;
     const newNote = {
       title: newTitle,
       content: newContent,
+      tags: newTags,
     };
     User.findOneAndUpdate(
       {
@@ -171,7 +194,12 @@ app
         "notes._id": noteId,
       },
       {
-        $set: { "notes.$.title": newTitle, "notes.$.content": newContent },
+        $set: {
+          "notes.$.title": newTitle,
+          "notes.$.content": newContent,
+          "notes.$.tags": newTags,
+        },
+        $addToSet: { tags: { $each: newTags } },
       },
       function (err, success) {
         if (err) {
@@ -203,6 +231,19 @@ app
       }
     );
   });
+
+/*** tag stuff ***/
+app.get("/tags/:userId", (req, res) => {
+  User.findOne({ _id: req.params.userId }, (err, foundUser) => {
+    if (foundUser) {
+      res.status(200);
+      res.send(foundUser.tags);
+      return;
+    }
+    res.status(404);
+    res.send("No tags found");
+  });
+});
 
 /*** notebook stuff **/
 //add new notebook
