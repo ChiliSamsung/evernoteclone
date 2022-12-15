@@ -141,22 +141,6 @@ app
     );
   });
 
-app.get("/notes/:userId/:filterTag", (req, res) => {
-  const filterByTag = req.params.filterTag;
-  User.findOne({ _id: req.params.userId }, (err, foundUser) => {
-    if (foundUser) {
-      const filteredNotes = foundUser.notes.filter((note) => {
-        return !note.tags.includes(filterByTag);
-      });
-      res.status(200);
-      res.send(filteredNotes);
-      return;
-    }
-    res.status(404);
-    res.send("No notes found for tag filter");
-  });
-});
-
 app
   .route("/notes/:userId/:noteId")
   //get a note for a given user
@@ -233,6 +217,7 @@ app
   });
 
 /*** tag stuff ***/
+//get all the tags for a given user
 app.get("/tags/:userId", (req, res) => {
   User.findOne({ _id: req.params.userId }, (err, foundUser) => {
     if (foundUser) {
@@ -242,6 +227,22 @@ app.get("/tags/:userId", (req, res) => {
     }
     res.status(404);
     res.send("No tags found");
+  });
+});
+
+app.get("/notes/:userId/:filterTag", (req, res) => {
+  const filterByTag = req.params.filterTag;
+  User.findOne({ _id: req.params.userId }, (err, foundUser) => {
+    if (foundUser) {
+      const filteredNotes = foundUser.notes.filter((note) => {
+        return !note.tags.includes(filterByTag);
+      });
+      res.status(200);
+      res.send(filteredNotes);
+      return;
+    }
+    res.status(404);
+    res.send("No notes found for tag filter");
   });
 });
 

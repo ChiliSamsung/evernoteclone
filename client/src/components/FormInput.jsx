@@ -15,6 +15,13 @@ function FormInput(props) {
     });
   }
 
+  const enterKeyHandler = props.enterKeyHandler;
+  function enterKeyListener(key) {
+    if (enterKeyHandler && key.code === "Enter") {
+      enterKeyHandler();
+    }
+  }
+
   return (
     <div className={props.customClassName}>
       {props.labelTitle && (
@@ -27,6 +34,7 @@ function FormInput(props) {
         placeholder={props.placeholder}
         className="form-control"
         onChange={handleInputUpdate}
+        onKeyDown={enterKeyListener}
       />
     </div>
   );

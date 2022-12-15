@@ -21,7 +21,7 @@ export default function FullNotePage() {
     title: "",
   });
   const [selectedNotebookId, setSelectedNotebookId] = React.useState("");
-  const [dummyTags, setDummyTags] = React.useState([
+  const [noteTags, setNoteTags] = React.useState([
     "Never gonna",
     "Eat",
     "Soggy",
@@ -67,6 +67,7 @@ export default function FullNotePage() {
       body: JSON.stringify({
         title: noteData.title,
         content: noteData.content,
+        tags: noteTags,
       }),
     };
     fetch(`/notes/${cookies.LoggedInUsername}/${noteId}`, requestOptions, []);
@@ -82,11 +83,11 @@ export default function FullNotePage() {
     );
   }
 
-  function handleAddTagButtonClick() {
+  function addTag() {
     const newTag = newTagString.title;
     if (isInAddTagMode && newTag) {
-      const newArray = [newTag].concat(dummyTags);
-      setDummyTags(newArray);
+      const newArray = [newTag].concat(noteTags);
+      setNoteTags(newArray);
       setNewTagString({
         title: "",
       });
@@ -97,10 +98,10 @@ export default function FullNotePage() {
 
   function handleTagClick(indexToRemove) {
     if (isInEditMode) {
-      const newTags = dummyTags.filter((tag, index) => {
+      const newTags = noteTags.filter((tag, index) => {
         return index !== indexToRemove;
       });
-      setDummyTags(newTags);
+      setNoteTags(newTags);
     }
   }
 
@@ -113,6 +114,9 @@ export default function FullNotePage() {
           title: responseJson.title,
           content: responseJson.content,
         });
+        if (responseJson.tags) {
+          setNoteTags(responseJson.tags);
+        }
       });
   }, [cookies, navigate, noteId]);
 
@@ -187,12 +191,12 @@ export default function FullNotePage() {
               {isInEditMode && (
                 <button
                   className="add-tag-button btn btn-primary"
-                  onClick={handleAddTagButtonClick}
+                  onClick={addTag}
                 >
                   <AddIcon />
                 </button>
               )}
-              {dummyTags
+              {noteTags
                 .filter((_, index) => {
                   return index < 3;
                 })
@@ -232,6 +236,7 @@ export default function FullNotePage() {
                 type="text"
                 labelValue={newTagString.title}
                 setFormData={setNewTagString}
+                enterKeyHandler={addTag}
               ></FormInput>
             </div>
           )}
