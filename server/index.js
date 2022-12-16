@@ -134,8 +134,10 @@ app
       function (err, success) {
         if (err) {
           res.send(`Could not add note for reason ${err}`);
+          console.log(`Could not add note for reason ${err}`);
         } else {
           res.send(`Was able to add note: ${newNote}`);
+          console.log(`Was able to add note: ${newNote}`);
         }
       }
     );
@@ -230,6 +232,8 @@ app.get("/tags/:userId", (req, res) => {
   });
 });
 
+//need to use query params instead now. We moved it below the "show given note"
+//route for now so that the conflict is not happening.
 app.get("/notes/:userId/:filterTag", (req, res) => {
   const filterByTag = req.params.filterTag;
   User.findOne({ _id: req.params.userId }, (err, foundUser) => {

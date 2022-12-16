@@ -27,7 +27,11 @@ function Home() {
   }, [cookies, loggedIn, navigate]);
 
   function addNote(note) {
-    const newNote = { title: note.title, content: note.content };
+    const newNote = {
+      title: note.title,
+      content: note.content,
+      tags: note.tags,
+    };
     const requestOptions = {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -67,7 +71,7 @@ function Home() {
   return (
     <div>
       <Header />
-      <CreateNoteArea addNote={addNote} />
+      <CreateNoteArea addNote={addNote} userId={cookies.LoggedInUsername} />
       <button
         className="open-notebooks btn btn-md btn-primary btn-block"
         onClick={() => {

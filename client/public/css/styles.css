@@ -117,8 +117,7 @@ form.create-note textarea {
     resize: none;
 }
 
-
-form.create-note button {
+.create-note-button {
     position: absolute;
     right: 18px;
     bottom: -18px;
@@ -136,6 +135,9 @@ form.create-note button {
 .add-note-button:hover {
     background: #f5a313;
 }
+
+
+
 
 
 /** home route **/

@@ -21,12 +21,7 @@ export default function FullNotePage() {
     title: "",
   });
   const [selectedNotebookId, setSelectedNotebookId] = React.useState("");
-  const [noteTags, setNoteTags] = React.useState([
-    "Never gonna",
-    "Eat",
-    "Soggy",
-    "Vegetables",
-  ]);
+  const [noteTags, setNoteTags] = React.useState([]);
   const [notebooks, setNotebooks] = React.useState([]);
   const [cookies] = useCookies(["user"]);
   const { noteId } = useParams();
@@ -85,7 +80,9 @@ export default function FullNotePage() {
 
   function addTag() {
     const newTag = newTagString.title;
-    if (isInAddTagMode && newTag) {
+    console.log(noteTags.length);
+    //can have at most 3 tags on a note
+    if (isInAddTagMode && newTag && noteTags.length < 3) {
       const newArray = [newTag].concat(noteTags);
       setNoteTags(newArray);
       setNewTagString({
@@ -196,23 +193,19 @@ export default function FullNotePage() {
                   <AddIcon />
                 </button>
               )}
-              {noteTags
-                .filter((_, index) => {
-                  return index < 3;
-                })
-                .map((tag, index) => {
-                  return (
-                    <button
-                      className="btn btn-outline-secondary"
-                      key={index}
-                      onClick={() => {
-                        handleTagClick(index);
-                      }}
-                    >
-                      <span className="tag-button-text">{tag}</span>
-                    </button>
-                  );
-                })}
+              {noteTags.slice(0, 3).map((tag, index) => {
+                return (
+                  <button
+                    className="btn btn-outline-secondary"
+                    key={index}
+                    onClick={() => {
+                      handleTagClick(index);
+                    }}
+                  >
+                    <span className="tag-button-text">{tag}</span>
+                  </button>
+                );
+              })}
             </label>
           </div>
           <div className="note-page-edit-buttons">
