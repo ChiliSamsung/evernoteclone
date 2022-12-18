@@ -232,24 +232,6 @@ app.get("/tags/:userId", (req, res) => {
   });
 });
 
-//need to use query params instead now. We moved it below the "show given note"
-//route for now so that the conflict is not happening.
-app.get("/notes/:userId/:filterTag", (req, res) => {
-  const filterByTag = req.params.filterTag;
-  User.findOne({ _id: req.params.userId }, (err, foundUser) => {
-    if (foundUser) {
-      const filteredNotes = foundUser.notes.filter((note) => {
-        return !note.tags.includes(filterByTag);
-      });
-      res.status(200);
-      res.send(filteredNotes);
-      return;
-    }
-    res.status(404);
-    res.send("No notes found for tag filter");
-  });
-});
-
 /*** notebook stuff **/
 //add new notebook
 app.post("/:userId/newnotebook", (req, res) => {

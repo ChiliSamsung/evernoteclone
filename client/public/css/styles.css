@@ -137,9 +137,6 @@ form.create-note textarea {
 }
 
 
-
-
-
 /** home route **/
 .open-notebooks {
     margin: 10px auto 30px auto;
@@ -159,7 +156,7 @@ form.create-note textarea {
 }
 
 .notes-container {
-    margin: 30px 5%;
+    margin: 0px 5% 1% 5%;
 }
 
 hr.rounded {
@@ -168,6 +165,9 @@ hr.rounded {
     margin: 0px 5%;
 }
 
+.filter-by-tag-container {
+    margin: 2% 5% 0% 5%;
+}
 
 /** login route **/
 .login-form {
