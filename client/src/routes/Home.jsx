@@ -12,23 +12,18 @@ function Home() {
   const [existingTags, setExistingTags] = React.useState([]);
   const navigate = useNavigate();
   const [cookies] = useCookies(["user"]);
-  const loggedIn = cookies.LoggedIn;
   const username = cookies.LoggedInUsername;
 
   //load up all the notes
   useEffect(() => {
-    if (!loggedIn) {
-      navigate("/login");
-    } else {
-      const queryString = `/notes/${username}`;
-      fetch(queryString)
-        .then((res) => res.json())
-        .then((responseJson) => {
-          setNotes(responseJson);
-          setFilteredNotes(responseJson);
-        });
-    }
-  }, [username, loggedIn, navigate]);
+    const queryString = `/notes/${username}`;
+    fetch(queryString)
+      .then((res) => res.json())
+      .then((responseJson) => {
+        setNotes(responseJson);
+        setFilteredNotes(responseJson);
+      });
+  }, [username]);
 
   //load existing tags
   useEffect(() => {

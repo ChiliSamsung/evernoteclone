@@ -17,25 +17,55 @@ import NotebooksPage from "./pages/NotebooksPage.jsx";
 import NotebookPage from "./pages/NotebookPage.jsx";
 import Logout from "./components/Logout.jsx";
 
-//redirect to login page if user is not logged in. Can't use on the Home route cause
-//react does not page refresh on navigate("/"). It's part of how react tries to avoid refreshes.
-function showIfLoggedIn(element) {
+//Use this wrapper to protect routes which user needs to be authenticated
+//in order to see. Gets executed automatically
+const ProtectedRoute = ({ children }) => {
   const cookies = document.cookie;
   const isLoggedIn = cookies.includes("LoggedIn=true");
-  console.log(`isLoggedIn ${isLoggedIn}`);
-  return isLoggedIn ? element : <Navigate replace to={"/login"} />;
-}
+  console.log(`${Date.now()} isLoggedIn ${isLoggedIn}`);
+
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
 
 const router = // Configure nested routes with JSX
   createBrowserRouter(
     createRoutesFromElements([
-      <Route path="/" element={<Home />} errorElement=<ErrorPage /> />,
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        }
+        errorElement=<ErrorPage />
+      />,
       <Route path="login" element={<Login />} />,
-      <Route path="notes/:noteId" element={showIfLoggedIn(<FullNotePage />)} />,
-      <Route path="notebooks" element={showIfLoggedIn(<NotebooksPage />)} />,
+      <Route
+        path="notes/:noteId"
+        element={
+          <ProtectedRoute>
+            <FullNotePage />{" "}
+          </ProtectedRoute>
+        }
+      />,
+      <Route
+        path="notebooks"
+        element={
+          <ProtectedRoute>
+            <NotebooksPage />{" "}
+          </ProtectedRoute>
+        }
+      />,
       <Route
         path="notebook/:notebookId"
-        element={showIfLoggedIn(<NotebookPage />)}
+        element={
+          <ProtectedRoute>
+            <NotebookPage />{" "}
+          </ProtectedRoute>
+        }
       />,
       <Route path="logout" element={<Logout />} />,
     ])
