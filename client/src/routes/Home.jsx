@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import Note from "../components/Note.jsx";
 import CreateNoteArea from "../components/CreateNoteArea.jsx";
 import Header from "../components/Header.jsx";
@@ -10,9 +10,25 @@ function Home() {
   const [notes, setNotes] = React.useState([]);
   const [filteredNotes, setFilteredNotes] = React.useState([]);
   const [existingTags, setExistingTags] = React.useState([]);
+  let currentFilterTag = "";
   const navigate = useNavigate();
   const [cookies] = useCookies(["user"]);
   const username = cookies.LoggedInUsername;
+  //show notes which have the tag
+  const updateFilteredNotes = useCallback(
+    (tag) => {
+      if (!tag) {
+        //if filter is empty, just show all notes
+        setFilteredNotes(notes);
+      } else {
+        const filtered = notes.filter((note) => {
+          return note.tags.includes(tag);
+        });
+        setFilteredNotes(filtered);
+      }
+    },
+    [notes]
+  );
 
   //load up all the notes
   useEffect(() => {
@@ -33,6 +49,11 @@ function Home() {
         setExistingTags(responseJson);
       });
   }, [username]);
+
+  //if notes ever changes, then updated filtered notes
+  useEffect(() => {
+    updateFilteredNotes(currentFilterTag);
+  }, [notes, currentFilterTag, updateFilteredNotes]);
 
   function addNote(note) {
     const newNote = {
@@ -74,21 +95,6 @@ function Home() {
     });
   }
 
-  //show notes which have the tag
-  function filterNotes(event) {
-    const filterByTag = event.target.value;
-
-    if (!filterByTag) {
-      //if filter is empty, just show all notes
-      setFilteredNotes(notes);
-    } else {
-      const filtered = notes.filter((note) => {
-        return note.tags.includes(filterByTag);
-      });
-      setFilteredNotes(filtered);
-    }
-  }
-
   return (
     <div>
       <Header />
@@ -107,7 +113,10 @@ function Home() {
         <label>Filter by Tag:</label>
         <select
           className="form-select notebook-selector"
-          onChange={filterNotes}
+          onChange={(event) => {
+            currentFilterTag = event.target.value;
+            updateFilteredNotes(currentFilterTag);
+          }}
         >
           <option key={-1}></option>
           {existingTags.map((tag, index) => {

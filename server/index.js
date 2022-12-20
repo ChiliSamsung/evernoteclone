@@ -134,10 +134,8 @@ app
       function (err, success) {
         if (err) {
           res.send(`Could not add note for reason ${err}`);
-          console.log(`Could not add note for reason ${err}`);
         } else {
           res.send(`Was able to add note: ${newNote}`);
-          console.log(`Was able to add note: ${newNote}`);
         }
       }
     );

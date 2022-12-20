@@ -15,8 +15,9 @@ function Note(props) {
       <p className="note-p">{props.content}</p>
       <button
         className="note-delete-button"
-        onClick={() => {
+        onClick={(event) => {
           props.deleteNote(props.id);
+          event.stopPropagation();
         }}
       >
         <DeleteIcon />

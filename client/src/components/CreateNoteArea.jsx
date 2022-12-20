@@ -12,11 +12,13 @@ function CreateNoteArea(props) {
     tags: [],
   });
   const [existingTags, setExistingTags] = React.useState([]);
+  const [selectorValue, setSelectorValue] = React.useState("");
 
   //when new tag is selected
   function handleOptionSelected(event) {
-    const currentTags = formInfo.tags;
     const newTag = event.target.value;
+    setSelectorValue(newTag);
+    const currentTags = formInfo.tags;
     //can have at most 3 tags on a note
     if (currentTags.length < 4 && !currentTags.includes(newTag)) {
       const newTags = formInfo.tags.concat(newTag);
@@ -61,7 +63,9 @@ function CreateNoteArea(props) {
         <select
           className="form-select notebook-selector mt-3"
           onChange={handleOptionSelected}
+          value={selectorValue}
         >
+          <option></option>
           {existingTags.map((tag, index) => {
             return <option key={index}>{tag}</option>;
           })}
@@ -87,6 +91,7 @@ function CreateNoteArea(props) {
               content: "",
               tags: [],
             });
+            setSelectorValue("");
           }}
         />
       </form>
