@@ -20,10 +20,8 @@ app.use(express.json());
 app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 //mongo DB atlas database is here as opposed to localhost.
-//mongoose.connect("mongodb://127.0.0.1:27017/notesDB");
-mongoose.connect(
-  "mongodb+srv://test-admin:clobberSlobberProper45@cluster0.lnz11yi.mongodb.net/?retryWrites=true&w=majority"
-);
+mongoose.connect("mongodb://127.0.0.1:27017/notesDB");
+//"mongodb+srv://test-admin:<password>@cluster0.lnz11yi.mongodb.net/?retryWrites=true&w=majority"
 
 const NoteSchema = new mongoose.Schema({
   title: String,
